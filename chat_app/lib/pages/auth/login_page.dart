@@ -10,13 +10,15 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
+  final userEmail = "";
+  final userPassword = "";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 80),
+          padding: const EdgeInsets.symmetric(vertical: 90, horizontal: 80),
           child: Form(
               key: formKey,
               child: Column(
