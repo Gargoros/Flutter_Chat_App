@@ -53,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
                     decoration: textInputDecoration.copyWith(
                         label: const Text("Password"),
                         prefixIcon: Icon(
-                          Icons.key,
+                          Icons.lock,
                           color: Theme.of(context).primaryColor,
                         )),
                   ),
