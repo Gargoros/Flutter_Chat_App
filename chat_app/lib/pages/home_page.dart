@@ -14,7 +14,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text("Chat APP"),
       ),
-      body: Center(child: CircularProgressIndicator()),
+      body: Center(child: Text("Home Page")),
     );
   }
 }
