@@ -1,2 +1,3 @@
 chat_app/pubspec.lock
 chat_app/lib/shared/constants.dart
+.DS_Store
