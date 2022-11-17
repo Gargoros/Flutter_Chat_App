@@ -1,3 +1,4 @@
+import 'package:chat_app/helper/helper_function.dart';
 import 'package:chat_app/pages/auth/login_page.dart';
 import 'package:chat_app/pages/search_page.dart';
 import 'package:chat_app/service/auth_service.dart';
@@ -13,6 +14,28 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   AuthService authService = AuthService();
+  String userFullName = "";
+  String userEmail = "";
+
+  @override
+  void initState() {
+    super.initState();
+    gettingUserData();
+  }
+
+  gettingUserData() async {
+    await HelperFunctions.getUserFullNameFromSF().then((valueName) {
+      setState(() {
+        userFullName = valueName!;
+      });
+    });
+    await HelperFunctions.getUserEmailFromSF().then((valueEmail) {
+      setState(() {
+        userEmail = valueEmail!;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +74,16 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(
                 height: 15,
               ),
-              Text(""),
+              Text(
+                userFullName,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text(
+                userEmail,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
             ]),
       ),
     );
