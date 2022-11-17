@@ -1,5 +1,6 @@
 import 'package:chat_app/helper/helper_function.dart';
 import 'package:chat_app/pages/auth/login_page.dart';
+import 'package:chat_app/pages/auth/profile_page.dart';
 import 'package:chat_app/pages/search_page.dart';
 import 'package:chat_app/service/auth_service.dart';
 import 'package:chat_app/widgets/widgets.dart';
@@ -55,13 +56,7 @@ class _HomePageState extends State<HomePage> {
         elevation: 0,
         backgroundColor: Theme.of(context).primaryColor,
       ),
-      body: Center(
-          child: ElevatedButton(
-        onPressed: () {
-          nextScreen(context, const LoginPage());
-        },
-        child: const Text("LogOut"),
-      )),
+      body: const Center(child: Text("Home Page")),
       drawer: Drawer(
         child: ListView(
             padding: const EdgeInsets.symmetric(vertical: 50),
@@ -77,12 +72,90 @@ class _HomePageState extends State<HomePage> {
               Text(
                 userFullName,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
               Text(
                 userEmail,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.black54),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              const Divider(
+                height: 2,
+              ),
+              ListTile(
+                onTap: () {},
+                selectedColor: Theme.of(context).primaryColor,
+                selected: true,
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                leading: const Icon(Icons.group),
+                title: const Text(
+                  "Groups",
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+              ListTile(
+                onTap: () {
+                  nextScreen(context, const ProfilePage());
+                },
+                selectedColor: Theme.of(context).primaryColor,
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                leading: const Icon(Icons.account_box),
+                title: const Text(
+                  "Profile",
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+              ListTile(
+                onTap: () async {
+                  showDialog(
+                      barrierDismissible: false,
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text("Logout"),
+                          content:
+                              const Text("Are you sure you want to logout?"),
+                          actions: [
+                            IconButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: const Icon(
+                                  Icons.cancel,
+                                  color: Colors.red,
+                                )),
+                            IconButton(
+                                onPressed: () async {
+                                  await authService.signOut();
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                          builder: ((context) =>
+                                              const LoginPage())),
+                                      (route) => false);
+                                },
+                                icon: const Icon(
+                                  Icons.done,
+                                  color: Colors.green,
+                                ))
+                          ],
+                        );
+                      });
+                },
+                selectedColor: Theme.of(context).primaryColor,
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                leading: const Icon(Icons.exit_to_app),
+                title: const Text(
+                  "Logout",
+                  style: TextStyle(color: Colors.black),
+                ),
               ),
             ]),
       ),
