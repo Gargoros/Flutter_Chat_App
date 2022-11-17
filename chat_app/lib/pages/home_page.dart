@@ -21,6 +21,7 @@ class _HomePageState extends State<HomePage> {
   String userFullName = "";
   String userEmail = "";
   bool _isLoading = false;
+  String groupName = "";
 
   @override
   void initState() {
@@ -55,7 +56,7 @@ class _HomePageState extends State<HomePage> {
         if (snapshot.hasData) {
           if (snapshot.data["groups"] != null) {
             if (snapshot.data["groups"].length != 0) {
-              return Text("Hello");
+              return const Text("Hello");
             } else {
               return noGroupWidget();
             }
@@ -75,32 +76,80 @@ class _HomePageState extends State<HomePage> {
 
   popUpDialog(BuildContext context) {
     showDialog(
-        barrierDismissible: true,
+        barrierDismissible: false,
         context: context,
         builder: (context) {
-          return AlertDialog(
-            title: const Text(
-              "Create a group",
-              textAlign: TextAlign.left,
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _isLoading == true
-                    ? Center(
-                        child: CircularProgressIndicator(
-                            color: Theme.of(context).primaryColor),
-                      )
-                    : TextField(
-                        decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context).primaryColor),
-                                borderRadius: BorderRadius.circular(20))),
-                      )
+          return StatefulBuilder(builder: ((context, setState) {
+            return AlertDialog(
+              title: const Text(
+                "Create a group",
+                textAlign: TextAlign.left,
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _isLoading == true
+                      ? Center(
+                          child: CircularProgressIndicator(
+                              color: Theme.of(context).primaryColor),
+                        )
+                      : TextField(
+                          onChanged: ((value) {
+                            setState(() {
+                              groupName = value;
+                            });
+                          }),
+                          style: const TextStyle(color: Colors.black),
+                          decoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context).primaryColor),
+                                  borderRadius: BorderRadius.circular(20)),
+                              errorBorder: OutlineInputBorder(
+                                  borderSide:
+                                      const BorderSide(color: Colors.red),
+                                  borderRadius: BorderRadius.circular(20)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide:
+                                      const BorderSide(color: Colors.purple),
+                                  borderRadius: BorderRadius.circular(20))),
+                        )
+                ],
+              ),
+              actions: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColor),
+                  child: const Text("CANCEL"),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (groupName != null) {
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      DatabaseService(
+                              userId: FirebaseAuth.instance.currentUser!.uid)
+                          .createGroup(userFullName,
+                              FirebaseAuth.instance.currentUser!.uid, groupName)
+                          .whenComplete(() {
+                        _isLoading = false;
+                      });
+                      Navigator.of(context).pop();
+                      showSnackBar(
+                          context, Colors.green, "Group Created successfully");
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColor),
+                  child: const Text("CREATE"),
+                )
               ],
-            ),
-          );
+            );
+          }));
         });
   }
 
@@ -121,7 +170,7 @@ class _HomePageState extends State<HomePage> {
               size: 75,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           const Text(
