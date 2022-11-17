@@ -37,9 +37,9 @@ class _LoginPageState extends State<LoginPage> {
                   userId: FirebaseAuth.instance.currentUser!.uid)
               .gettingUserData(userEmail);
 
-          await HelperFunction.saveUserLoggedInStatus(true);
-          await HelperFunction.saveUserEmailSF(userEmail);
-          await HelperFunction.saveUserNameSF(snapshot.docs[0]["fullName"]);
+          await HelperFunctions.saveUserLoggedInStatus(true);
+          await HelperFunctions.saveUserEmailSF(userEmail);
+          await HelperFunctions.saveUserNameSF(snapshot.docs[0]["fullName"]);
 
           nextScreenReplace(context, const HomePage());
         } else {

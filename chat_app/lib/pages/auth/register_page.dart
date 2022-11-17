@@ -32,9 +32,9 @@ class _RegisterPageState extends State<RegisterPage> {
               userFullName, userEmail, userPassword)
           .then((value) async {
         if (value == true) {
-          await HelperFunction.saveUserLoggedInStatus(true);
-          await HelperFunction.saveUserEmailSF(userEmail);
-          await HelperFunction.saveUserNameSF(userFullName);
+          await HelperFunctions.saveUserLoggedInStatus(true);
+          await HelperFunctions.saveUserEmailSF(userEmail);
+          await HelperFunctions.saveUserNameSF(userFullName);
           nextScreenReplace(context, const HomePage());
         } else {
           showSnackBar(context, Colors.red, value);
