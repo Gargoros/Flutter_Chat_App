@@ -10,9 +10,9 @@ class DatabaseService {
   final CollectionReference groupCollection =
       FirebaseFirestore.instance.collection("groups");
 
-  Future savingUserData(String fullName, String email) async {
+  Future savingUserData(String userfullName, String email) async {
     return await userCollection.doc(userId).set({
-      "fullName": fullName,
+      "fullName": userfullName,
       "email": email,
       "groups": [],
       "profilePic": "",
@@ -28,5 +28,28 @@ class DatabaseService {
 
   getUserGroups() async {
     return userCollection.doc(userId).snapshots();
+  }
+
+  Future createGroup(String userfullName, String id, String groupName) async {
+    DocumentReference groupDocumentReference = await groupCollection.add({
+      "groupName": groupName,
+      "grooupIcon": "",
+      "admin": "${id}_$userfullName",
+      "members": [],
+      "groupId": "",
+      "recentMessage": "",
+      "recentMessageSender": "",
+    });
+
+    await groupDocumentReference.update({
+      "members": FieldValue.arrayUnion(["${userId}_$userfullName"]),
+      "groupId": groupDocumentReference.id,
+    });
+
+    DocumentReference userDocumentReference = await userCollection.doc(userId);
+    return await userDocumentReference.update({
+      "groups":
+          FieldValue.arrayUnion(["${groupDocumentReference.id}_$groupName"])
+    });
   }
 }
