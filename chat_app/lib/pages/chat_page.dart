@@ -1,4 +1,5 @@
 import 'package:chat_app/pages/auth/group_infon.dart';
+import 'package:chat_app/service/database_service.dart';
 import 'package:chat_app/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,18 @@ class _ChatPageState extends State<ChatPage> {
     super.initState();
   }
 
-  getChatAndAdmin() {}
+  getChatAndAdmin() {
+    DatabaseService().getChat(widget.groupId).then((val) {
+      setState(() {
+        chats = val;
+      });
+    });
+    DatabaseService().getGroupAdmin(widget.groupId).then((value) {
+      setState(() {
+        admin = value;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
