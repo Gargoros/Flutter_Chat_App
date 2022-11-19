@@ -4,6 +4,7 @@ import 'package:chat_app/pages/auth/profile_page.dart';
 import 'package:chat_app/pages/search_page.dart';
 import 'package:chat_app/service/auth_service.dart';
 import 'package:chat_app/service/database_service.dart';
+import 'package:chat_app/widgets/group_title.dart';
 import 'package:chat_app/widgets/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,14 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     gettingUserData();
+  }
+
+  getId(String res) {
+    return res.substring(0, res.indexOf("_"));
+  }
+
+  getName(String res) {
+    return res.substring(res.indexOf("_") + 1);
   }
 
   gettingUserData() async {
@@ -56,7 +65,17 @@ class _HomePageState extends State<HomePage> {
         if (snapshot.hasData) {
           if (snapshot.data["groups"] != null) {
             if (snapshot.data["groups"].length != 0) {
-              return const Text("Hello");
+              return ListView.builder(
+                itemCount: snapshot.data["groups"].length,
+                itemBuilder: (context, index) {
+                  int reverseIndex = snapshot.data["groups"].length - index - 1;
+                  return GroupTitle(
+                      userFullName: snapshot.data["fullName"],
+                      groupId: getId(snapshot.data["groups"][reverseIndex]),
+                      groupName:
+                          getName(snapshot.data["groups"][reverseIndex]));
+                },
+              );
             } else {
               return noGroupWidget();
             }
