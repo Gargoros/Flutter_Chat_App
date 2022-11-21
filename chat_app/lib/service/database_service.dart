@@ -70,4 +70,21 @@ class DatabaseService {
   getGroupMembers(String groupId) async {
     return groupCollection.doc(groupId).snapshots();
   }
+
+  searchByName(String groupName) async {
+    return groupCollection.where("groupName", isEqualTo: groupName).get();
+  }
+
+  Future<bool?> isUserJoined(
+      String groupName, String groupId, String userName) async {
+    DocumentReference userDocumentReference = userCollection.doc(userId);
+    DocumentSnapshot documentSnapshot = await userDocumentReference.get();
+
+    List<dynamic> groups = await documentSnapshot["groups"];
+    if (groups.contains("${groupId}_$groupName")) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
